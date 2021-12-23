@@ -1,12 +1,37 @@
 import React, { useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Input, Button } from 'react-native-elements';
+import { auth } from '../firebase';
 
 const RegisterScreen = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [imageUrl, setImageUrl] = useState('');
+
+    const register = () => {
+        auth.createUserWithEmailAndPassword(email, password)
+         .then((userCredential) => {
+           // Signed in 
+          var user = userCredential.user;
+          user.updateProfile({
+            displayName: name,
+            photoURL: imageUrl ? imageUrl : "https://unitycharity.com/wp-content/uploads/2015/09/wallpaper-for-facebook-profile-photo-1.jpg"
+          }).then(() => {
+            // Update successful
+            // ...
+          }).catch((error) => {
+            // An error occurred
+            // ...
+          }); 
+          // ...
+            })
+         .catch((error) => {
+         var errorMessage = error.message;
+         alert(errorMessage)
+          // ..
+  });
+    }
 
     return (
         <View style={styles.container}>
@@ -38,9 +63,12 @@ const RegisterScreen = () => {
                 leftIcon={{ type: 'material', name: 'face' }}
                 value={imageUrl}
                 onChangeText={text => setImageUrl(text)}
-                secureTextEntry
+
             />
-            <Button title="register" containerStyle={{width: 200, marginTop: 10}} />
+            <Button 
+            title="register" 
+            containerStyle={{width: 200, marginTop: 10}}
+            onPress={register} />
         </View>
     )
 }
