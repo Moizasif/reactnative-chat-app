@@ -18,6 +18,7 @@ const LoginScreen = ({navigation}) => {
             if (user) {
               navigation.replace('Chat');
             } else {
+                navigation.canGoBack()&&navigation.popToTop();
               // User is signed out
             }
           });
